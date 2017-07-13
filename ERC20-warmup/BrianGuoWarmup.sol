@@ -17,11 +17,12 @@ contract IC3Token {
     event Transfer(address indexed_from, address indexed_to, uint256 _value);
     event Approval(address indexed_owner, address indexed_spender, uint256 _value);
 
+
     function totalSupply() constant returns(uint256 totalSupply){
         return supply;
     }
 
-    function balanceOf(address _owner) returns(uint256 balance) {
+    function balanceOf(address _owner) constant returns(uint256 balance) {
         return balances[_owner];
     }
 
@@ -55,21 +56,21 @@ contract IC3Token {
         return true;
     }
 
-    function allowance(address _owner, address _spender) returns (uint256 remaining){
+    function allowance(address _owner, address _spender) constant returns (uint256 remaining){
         return approvals[_owner][_spender];
     }
 
     function deposit() payable returns (bool success){
         balances[msg.sender] += msg.value;
-        supply += 1;
+        supply += msg.value;
         return true;
     }
 
     function withdraw(uint256 _amount) returns (bool success){
         if (balances[msg.sender] >= _amount){
             balances[msg.sender] -= _amount;
-            msg.sender.transfer(1);
-            supply -= 1;
+            msg.sender.transfer(_amount);
+            supply -= _amount;
             return true;
         }
         return false;
